@@ -5,7 +5,7 @@ WORKDIR /app
 
 # Copier les dépendances en premier (cache Docker)
 COPY package*.json ./
-RUN npm ci && chmod -R +x node_modules/.bin
+RUN npm ci
 
 # URL publique du proxy (ex: https://proxy.mondomaine.com)
 ARG VITE_PROXY_URL=http://localhost:4000
