@@ -1,0 +1,27 @@
+services:
+
+  # ── Application PWA (nginx) ──────────────────────────────────────────────────
+  pwa:
+    build:
+      context: ./web-pwa
+      dockerfile: Dockerfile
+      args:
+        # URL publique du proxy accessible depuis le navigateur des utilisateurs
+        # Remplacer par votre domaine Coolify (ex: https://proxy.mondomaine.com)
+        VITE_PROXY_URL: ${VITE_PROXY_URL:-http://localhost:4000}
+    ports:
+      - "${PWA_PORT:-3000}:80"
+    restart: unless-stopped
+    depends_on:
+      - proxy
+
+  # ── Proxy FFmpeg (CORS + transcodage AC3/Dolby → AAC) ───────────────────────
+  proxy:
+    build:
+      context: ./proxy
+      dockerfile: Dockerfile
+    ports:
+      - "${PROXY_PORT:-4000}:4000"
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
